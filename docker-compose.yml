@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourPassword123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  rabbimq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  userservice:
+    build: ./services/UserService
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=TaskManager;User=sa;Password=YourPassword123!
+    depends_on:
+      - sqlserver
+
+  taskservice:
+    build: ./services/TaskService
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=TaskManager;User=sa;Password=YourPassword123!
+    depends_on:
+      - sqlserver
+      - rabbimq
