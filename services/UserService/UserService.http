@@ -1,0 +1,53 @@
+@UserService_HostAddress = https://localhost:7000
+
+### Test service
+GET {{UserService_HostAddress}}/api/auth/test
+
+### Register a new user
+POST {{UserService_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "P@ssword123",
+  "displayName": "Test User"
+}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+### Try registering same user again (should fail)
+POST {{UserService_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "P@ssword123",
+  "displayName": "Test User"
+}
+
+### Login with valid credentials
+POST {{UserService_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "P@ssword123"
+}
+
+### Login with invalid credentials
+POST {{UserService_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "wrongpassword"
+}
+
+### Test protected endpoint (requires valid JWT)
+GET {{UserService_HostAddress}}/api/auth/me
+Authorization: Bearer {{auth_token}}
+
+### Test without token (should fail)
+GET {{UserService_HostAddress}}/api/auth/me
