@@ -33,7 +33,7 @@ namespace UserService.Controllers
                 {
                     message = "User registered successfully",
                     token,
-                    user = new { user.Id, user.Email, user.DisplayName }
+                    user = new { user.Id, user.Email, user.DisplayName, user.Role }
                 });
             }
             catch (Exception ex)
@@ -77,13 +77,15 @@ namespace UserService.Controllers
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             var userName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
             return Ok(new
             {
                 message = "This is a protected endpoint!",
                 userId,
                 userEmail,
-                userName
+                userName,
+                userRole
             });
         }
 
@@ -114,7 +116,7 @@ namespace UserService.Controllers
                 return Ok(new
                 {
                     message = "Admin user registered successfully",
-                    token = token,
+                    token,
                     user = new { user.Id, user.Email, user.DisplayName, user.Role }
                 });
             }
