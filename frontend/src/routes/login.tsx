@@ -1,9 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useAuth } from "../hooks/useAuth";
+import { LoginForm } from "../components/LoginForm";
 
 export const Route = createFileRoute("/login")({
-  component: () => (
-    <div style={{ padding: "10px" }}>
-      <h3>Login</h3>
-    </div>
-  ),
+  component: LoginComponent,
 });
+
+function LoginComponent() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
+  return <LoginForm />;
+}

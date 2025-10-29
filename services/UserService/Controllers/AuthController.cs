@@ -58,7 +58,7 @@ namespace UserService.Controllers
             return Ok(new
             {
                 token,
-                user = new { user.Id, user.Email, user.DisplayName }
+                user = new { user.Id, user.Email, user.DisplayName, user.Role }
             });
         }
 

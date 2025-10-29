@@ -5,4 +5,15 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [tanstackRouter(), react()],
+  server: {
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: "https://localhost:7000",
+        changeOrigin: true,
+        secure: false, // This is important for HTTPS with self-signed certificates
+        rewrite: (path) => path,
+      },
+    },
+  },
 });

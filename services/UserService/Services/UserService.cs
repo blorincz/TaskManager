@@ -71,7 +71,7 @@ public class UserService : IUserService
         {
             _logger.LogInformation("Attempting login for user: {Email}", request.Email);
 
-            var user = await _context.Users
+            User? user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
