@@ -1,0 +1,61 @@
+@TaskService_HostAddress = https://localhost:7001
+@auth_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MDRhZjNlNy03ZDE1LTQ4ODgtYWM2MS00NzNhZDQ2NDcwNDUiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJuYW1lIjoiVGVzdCBVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsInJvbGUiOiJVc2VyIiwianRpIjoiOTE0YTE5NTctNmIxZS00YzFlLWE2ZTItNWY5M2I3NjM1MmJkIiwiZXhwIjoxNzYxNzg4ODc4LCJpc3MiOiJUYXNrTWFuYWdlciIsImF1ZCI6IlRhc2tNYW5hZ2VyVXNlcnMifQ.dhCFAPTFdb6gzeOXnsy5fcrDxnzItT253Z1jzcvHmqk
+
+### Get all tasks
+GET {{TaskService_HostAddress}}/api/tasks
+Authorization: Bearer {{auth_token}}
+
+### Get tasks by status
+GET {{TaskService_HostAddress}}/api/tasks?status=todo
+Authorization: Bearer {{auth_token}}
+
+### Get task by ID
+GET {{TaskService_HostAddress}}/api/tasks/489dd03b-2228-47e3-8484-379e03dd8f72
+Authorization: Bearer {{auth_token}}
+
+### Create a new task
+POST {{TaskService_HostAddress}}/api/tasks
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Complete project documentation",
+  "description": "Write comprehensive documentation for the TaskManager project",
+  "priority": 2,
+  "dueDate": "2024-12-31T23:59:59Z"
+}
+
+### Update a task
+PUT {{TaskService_HostAddress}}/api/tasks/12387065-9761-4a49-a192-dd54ed8eee1c
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Complete project documentation",
+  "description": "Write comprehensive documentation with examples",
+  "status": "inprogress",
+  "priority": 1,
+  "dueDate": "2024-12-25T23:59:59Z"
+}
+
+### Assign task to user
+PUT {{TaskService_HostAddress}}/api/tasks/12387065-9761-4a49-a192-dd54ed8eee1c/assign
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "assigneeId": "C1B8CABE-67C9-4409-9C87-A3EA3C37E2AA"
+}
+
+### Update task status
+PUT {{TaskService_HostAddress}}/api/tasks/12387065-9761-4a49-a192-dd54ed8eee1c/status
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "status": "done"
+}
+
+### Delete task
+DELETE {{TaskService_HostAddress}}/api/tasks/12387065-9761-4a49-a192-dd54ed8eee1c
+Authorization: Bearer {{auth_token}}

@@ -461,3 +461,7 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,react,visualstudiocode,visualstudio,windows
+frontend/src/routeTree.gen.ts
+/.gitignore
+/frontend/src/routeTree.gen.ts
+/frontend/src/routeTree.gen.ts
