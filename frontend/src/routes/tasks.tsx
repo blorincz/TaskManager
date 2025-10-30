@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { TaskDashboard } from "../components/TaskDashboard";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export const Route = createFileRoute("/tasks")({
   component: () => (
-    <div style={{ padding: "10px" }}>
-      <h3>Tasks</h3>
-    </div>
+    <ProtectedRoute>
+      <TaskDashboard />
+    </ProtectedRoute>
   ),
 });

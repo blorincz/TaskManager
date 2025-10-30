@@ -2,17 +2,30 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [tanstackRouter(), react()],
   server: {
     port: 5173,
     proxy: {
-      "/api": {
+      "/api/auth": {
         target: "https://localhost:7000",
         changeOrigin: true,
-        secure: false, // This is important for HTTPS with self-signed certificates
-        rewrite: (path) => path,
+        secure: false,
+      },
+      "/api/admin": {
+        target: "https://localhost:7000",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/userprofile": {
+        target: "https://localhost:7000",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/tasks": {
+        target: "https://localhost:7001",
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
