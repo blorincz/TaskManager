@@ -1,0 +1,90 @@
+{
+  "Routes": [
+    // =============================================
+    // USER SERVICE ROUTES
+    // =============================================
+
+    // Auth Controller - Public endpoints (login, register)
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Auth"
+    },
+
+    // Admin Controller - Admin-only endpoints
+    {
+      "DownstreamPathTemplate": "/api/admin/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/admin/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Admin"
+    },
+
+    // UserProfile Controller - User profile management
+    {
+      "DownstreamPathTemplate": "/api/userprofile/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/userprofile/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "UserProfile"
+    },
+
+    // =============================================
+    // TASK SERVICE ROUTES
+    // =============================================
+
+    // Tasks Controller - All task operations
+    {
+      "DownstreamPathTemplate": "/api/tasks/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tasks/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Tasks"
+    },
+
+    // Specific task operations (assign, status, etc.)
+    {
+      "DownstreamPathTemplate": "/api/tasks/{id}/{operation}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tasks/{id}/{operation}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "TaskOperations"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7002",
+    "RequestIdKey": "OcelotRequestId"
+  }
+}

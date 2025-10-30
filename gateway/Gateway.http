@@ -1,0 +1,23 @@
+@Gateway_HostAddress = https://localhost:7002
+@auth_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMWJiMGVhZS1iZWVmLTRhN2YtYTgwMC0xZGIzNWI5OWVlYzQiLCJlbWFpbCI6ImFkbWluQHRhc2ttYW5hZ2VyLmNvbSIsIm5hbWUiOiJTeXN0ZW0gQWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsInJvbGUiOiJBZG1pbiIsImp0aSI6IjgxZDc1MmQwLTA2NjctNDY4Ny1iMmZkLWE2NDI0ZjMyMDQ1YSIsImV4cCI6MTc2MTgwMzI2NSwiaXNzIjoiVGFza01hbmFnZXIiLCJhdWQiOiJUYXNrTWFuYWdlclVzZXJzIn0.I7jtfh4MBBHeYGuZDN0-OnyRrzNOGo60SKusoEzjpaU
+
+### Test User Admin Service through Gateway
+GET {{Gateway_HostAddress}}/api/admin/users
+Authorization: Bearer {{auth_token}}
+
+### Test UserProfile Service through Gateway
+GET {{Gateway_HostAddress}}/api/userprofile/claims
+Authorization: Bearer {{auth_token}}
+
+### Test Task Service through Gateway  
+GET {{Gateway_HostAddress}}/api/tasks
+Authorization: Bearer {{auth_token}}
+
+### Test Auth through Gateway
+POST {{Gateway_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@taskmanager.com",
+  "password": "T@mara1969"
+}

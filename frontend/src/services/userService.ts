@@ -7,7 +7,7 @@ import type {
 } from "../types/user";
 
 // Use relative path for proxy, but fallback to direct URL if needed
-const API_BASE = import.meta.env.DEV ? "/api" : "https://localhost:7000/api";
+const API_BASE = import.meta.env.DEV ? "/api" : "/api";
 
 class UserService {
   private async request<T>(

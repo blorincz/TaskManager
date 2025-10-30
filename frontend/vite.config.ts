@@ -7,23 +7,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api/auth": {
-        target: "https://localhost:7000",
-        changeOrigin: true,
-        secure: false,
-      },
-      "/api/admin": {
-        target: "https://localhost:7000",
-        changeOrigin: true,
-        secure: false,
-      },
-      "/api/userprofile": {
-        target: "https://localhost:7000",
-        changeOrigin: true,
-        secure: false,
-      },
-      "/api/tasks": {
-        target: "https://localhost:7001",
+      // Route ALL API calls through the Gateway
+      "/api": {
+        target: "https://localhost:7002", // Gateway
         changeOrigin: true,
         secure: false,
       },
