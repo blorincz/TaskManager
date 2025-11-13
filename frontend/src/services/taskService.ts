@@ -7,7 +7,7 @@ import type {
   TaskResponse,
 } from "../types/task";
 
-const API_BASE = import.meta.env.DEV ? "/api" : "/api";
+const API_BASE = "/api";
 
 class TaskService {
   private async request<T>(

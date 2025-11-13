@@ -1,30 +1,84 @@
 version: '3.8'
+
 services:
+  # SQL Server Database
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      SA_PASSWORD: "YourPassword123!"
+      SA_PASSWORD: "P@ssword123"
       ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
     ports:
       - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - taskmanager-network
 
-  rabbimq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
+  # User Service
   userservice:
-    build: ./services/UserService
+    build:
+      context: ./services
+      dockerfile: UserService/Dockerfile
     environment:
-      - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=TaskManager;User=sa;Password=YourPassword123!
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskManager;User Id=sa;Password=P@ssword123;TrustServerCertificate=true;
+    ports:
+      - "7000:8080"
     depends_on:
       - sqlserver
+    networks:
+      - taskmanager-network
 
+  # Task Service
   taskservice:
-    build: ./services/TaskService
+    build:
+      context: ./services
+      dockerfile: TaskService/Dockerfile
     environment:
-      - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=TaskManager;User=sa;Password=YourPassword123!
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskManager;User Id=sa;Password=P@ssword123;TrustServerCertificate=true;
+    ports:
+      - "7001:8080"
     depends_on:
       - sqlserver
-      - rabbimq
+      - userservice
+    networks:
+      - taskmanager-network
+
+  # API Gateway
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "7002:8080"
+    depends_on:
+      - userservice
+      - taskservice
+    networks:
+      - taskmanager-network
+
+  # React Frontend (unchanged)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway
+    networks:
+      - taskmanager-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  taskmanager-network:
+    driver: bridge

@@ -7,11 +7,11 @@
     // Auth Controller - Public endpoints (login, register)
     {
       "DownstreamPathTemplate": "/api/Auth/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7000
+          "Host": "userservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/api/Auth/{everything}",
@@ -22,11 +22,11 @@
     // Admin Controller - Admin-only endpoints
     {
       "DownstreamPathTemplate": "/api/Admin/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7000
+          "Host": "userservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/api/Admin/{everything}",
@@ -37,11 +37,11 @@
     // UserProfile Controller - User profile management
     {
       "DownstreamPathTemplate": "/api/UserProfile/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7000
+          "Host": "userservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/api/UserProfile/{everything}",
@@ -56,11 +56,11 @@
     // Tasks Controller - All task operations
     {
       "DownstreamPathTemplate": "/api/Tasks/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "taskservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/api/Tasks/{everything}",
@@ -71,11 +71,11 @@
     // Specific task operations (assign, status, etc.)
     {
       "DownstreamPathTemplate": "/api/Tasks/{id}/{operation}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "taskservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/api/Tasks/{id}/{operation}",
@@ -84,7 +84,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7002",
+    "BaseUrl": "http://gateway:8080",
     "RequestIdKey": "OcelotRequestId"
   }
 }
