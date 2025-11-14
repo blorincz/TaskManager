@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MessageContracts;
+using MessageContracts.Events;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using TaskService.Models;
 using TaskService.Services;
 
@@ -12,11 +16,13 @@ namespace TaskService.Controllers;
 public class TasksController : ControllerBase
 {
     private readonly ITaskService _taskService;
+    private readonly IRabbitMQService _rabbitMQService;
     private readonly ILogger<TasksController> _logger;
 
-    public TasksController(ITaskService taskService, ILogger<TasksController> logger)
+    public TasksController(ITaskService taskService, IRabbitMQService rabbitMQService ,ILogger<TasksController> logger)
     {
         _taskService = taskService;
+        _rabbitMQService = rabbitMQService;
         _logger = logger;
     }
 
@@ -61,7 +67,23 @@ public class TasksController : ControllerBase
         {
             var userId = GetCurrentUserId();
             var task = await _taskService.CreateTaskAsync(request, userId);
-            return CreatedAtAction(nameof(GetTask), new { id = task.Id }, new { task });
+            if (task != null)
+            {
+                // Publish TaskCreatedEvent
+                var taskCreatedEvent = new TaskCreatedEvent
+                {
+                    TaskId = task.Id,
+                    Title = task.Title,
+                    CreatedBy = task.CreatedBy,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _rabbitMQService.PublishMessage(Queues.TaskCreated, taskCreatedEvent);
+                _logger.LogInformation("Published TaskCreatedEvent for task {TaskTitle}", request.Title);
+
+                return CreatedAtAction(nameof(GetTask), new { message = "Task created successfully", id = task.Id }, new { task });
+            }
+            return BadRequest(new { message = "Unable to create task" });
         }
         catch (Exception ex)
         {
@@ -118,7 +140,19 @@ public class TasksController : ControllerBase
             {
                 return NotFound(new { message = "Task not found" });
             }
-            return Ok(new { task });
+            // Publish TaskAssignedEvent
+            var taskAssignedEvent = new TaskAssignedEvent
+            {
+                TaskId = id,
+                Title = task.Title,
+                AssignedTo = request.AssigneeId,
+                AssignedAt = DateTime.UtcNow
+            };
+
+            _rabbitMQService.PublishMessage(Queues.TaskAssigned, taskAssignedEvent);
+            _logger.LogInformation("Published TaskAssignedEvent for task {TaskId}", id);
+
+            return Ok(new { message = "Task assigned successfully", task });
         }
         catch (Exception ex)
         {

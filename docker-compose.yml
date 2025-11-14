@@ -1,6 +1,19 @@
-version: '3.8'
-
 services:
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password123
+    ports:
+      - "5672:5672" # AMQP protocol
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - taskmanager-network
+
   # SQL Server Database
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -24,10 +37,14 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskManager;User Id=sa;Password=P@ssword123;TrustServerCertificate=true;
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=admin
+      - RabbitMQ__Password=password123
     ports:
       - "7000:8080"
     depends_on:
       - sqlserver
+      - rabbitmq
     networks:
       - taskmanager-network
 
@@ -40,11 +57,33 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskManager;User Id=sa;Password=P@ssword123;TrustServerCertificate=true;
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=admin
+      - RabbitMQ__Password=password123
     ports:
       - "7001:8080"
     depends_on:
       - sqlserver
+      - rabbitmq
       - userservice
+    networks:
+      - taskmanager-network
+
+  # Notification service
+  notificationservice:
+    build:
+      context: ./services
+      dockerfile: NotificationService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=admin
+      - RabbitMQ__Password=password123
+    ports:
+      - "7003:8080"
+    depends_on:
+      - rabbitmq
     networks:
       - taskmanager-network
 
@@ -78,6 +117,7 @@ services:
 
 volumes:
   sqlserver_data:
+  rabbitmq_data:
 
 networks:
   taskmanager-network:

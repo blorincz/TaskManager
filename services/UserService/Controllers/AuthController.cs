@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MessageContracts;
+using MessageContracts.Events;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 using UserService.Constants;
 using UserService.Models;
 using UserService.Services;
@@ -12,12 +15,16 @@ namespace UserService.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRabbitMQService _rabbitMQService;
         private readonly IJwtService _jwtService;
+        private readonly ILogger _logger;
 
-        public AuthController(IUserService userService, IJwtService jwtService)
+        public AuthController(IUserService userService, IRabbitMQService rabbitMQService, IJwtService jwtService, ILogger logger)
         {
             _userService = userService;
+            _rabbitMQService = rabbitMQService;
             _jwtService = jwtService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -29,12 +36,28 @@ namespace UserService.Controllers
                 var user = await _userService.RegisterAsync(request);
                 var token = _jwtService.GenerateToken(user);
 
-                return Ok(new
+                if (user != null)
                 {
-                    message = "User registered successfully",
-                    token,
-                    user = new { user.Id, user.Email, user.DisplayName, user.Role }
-                });
+                    // Publish UserRegisteredEvent to RabbitMQ
+                    var userRegisteredEvent = new UserRegisteredEvent
+                    {
+                        UserId = user.Id,
+                        DisplayName = request.DisplayName,
+                        Email = request.Email,
+                        RegisteredAt = DateTime.UtcNow
+                    };
+
+                    _rabbitMQService.PublishMessage(Queues.UserRegistered, userRegisteredEvent);
+                    _logger.LogInformation("Published UserRegisteredEvent for user {DisplayName}", request.DisplayName);
+
+                    return Ok(new
+                    {
+                        message = "User registered successfully",
+                        token,
+                        user = new { user?.Id, user?.Email, user?.DisplayName, user?.Role }
+                    });
+                }
+                return BadRequest(new { message = "Unable to register user" });
             }
             catch (Exception ex)
             {
