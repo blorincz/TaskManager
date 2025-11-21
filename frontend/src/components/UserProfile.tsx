@@ -4,7 +4,7 @@ import { userService } from "../services/userService";
 import { useAuth } from "../hooks/useAuth";
 import type { UserProfileResponse } from "../types/user";
 
-export const UserProfile: React.FC = () => {
+export const UserProfile = () => {
   const { user, logout } = useAuth();
   const [profile, setProfile] = useState<UserProfileResponse | null>(null);
   const [displayName, setDisplayName] = useState("");

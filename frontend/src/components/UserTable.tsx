@@ -6,10 +6,7 @@ interface UserTableProps {
   onRoleUpdate: (userId: string, newRole: string) => Promise<boolean>;
 }
 
-export const UserTable: React.FC<UserTableProps> = ({
-  users,
-  onRoleUpdate,
-}) => {
+export const UserTable = ({ users, onRoleUpdate }: UserTableProps) => {
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
 
   const handleRoleChange = async (userId: string, newRole: string) => {

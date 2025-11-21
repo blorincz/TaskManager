@@ -3,7 +3,7 @@ import { useUserManagement } from "../hooks/useUserManagement";
 import { UserTable } from "./UserTable";
 import { useAuth } from "../hooks/useAuth";
 
-export const AdminDashboard: React.FC = () => {
+export const AdminDashboard = () => {
   const { users, stats, loading, error, fetchUsers, updateUserRole } =
     useUserManagement();
   const { user: currentUser } = useAuth();

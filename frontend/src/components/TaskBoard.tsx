@@ -7,11 +7,11 @@ interface TaskBoardProps {
   onTaskDelete: (id: string) => Promise<boolean>;
 }
 
-export const TaskBoard: React.FC<TaskBoardProps> = ({
+export const TaskBoard = ({
   tasks,
   onTaskUpdate,
   onTaskDelete,
-}) => {
+}: TaskBoardProps) => {
   const columns = [
     { key: "todo", title: "To Do", color: "#e2e8f0" },
     { key: "inprogress", title: "In Progress", color: "#fed7aa" },

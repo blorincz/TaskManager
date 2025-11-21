@@ -6,10 +6,7 @@ interface CreateTaskFormProps {
   onCancel: () => void;
 }
 
-export const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
-  onSubmit,
-  onCancel,
-}) => {
+export const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps) => {
   const [formData, setFormData] = useState<CreateTaskRequest>({
     title: "",
     description: "",

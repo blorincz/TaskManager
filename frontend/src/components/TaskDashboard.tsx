@@ -6,7 +6,7 @@ import { TaskBoard } from "./TaskBoard";
 import { CreateTaskForm } from "./CreateTaskForm";
 import type { CreateTaskRequest, UpdateTaskRequest } from "../types/task";
 
-export const TaskDashboard: React.FC = () => {
+export const TaskDashboard = () => {
   const {
     tasks,
     allTasks,

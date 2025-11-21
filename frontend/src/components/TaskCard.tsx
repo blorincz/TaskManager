@@ -9,11 +9,7 @@ interface TaskCardProps {
   onDelete: (id: string) => Promise<boolean>;
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({
-  task,
-  onUpdate,
-  onDelete,
-}) => {
+export const TaskCard = ({ task, onUpdate, onDelete }: TaskCardProps) => {
   const { user } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

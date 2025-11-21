@@ -7,10 +7,10 @@ interface ProtectedRouteProps {
   requiredRole?: string;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+export const ProtectedRoute = ({
   children,
   requiredRole,
-}) => {
+}: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
